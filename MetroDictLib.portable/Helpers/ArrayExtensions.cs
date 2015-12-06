@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MetroDictLib.Helpers
@@ -48,5 +49,21 @@ namespace MetroDictLib.Helpers
 				ret[0] = byteArray[i + startIndex];
 			return ret;
 		}
-	}
+
+        /// <summary>
+        /// Not quite for an array, but whatever.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumeration"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+        {
+            foreach (T item in enumeration)
+            {
+                action(item);
+                yield return item;
+            }
+        }
+    }
 }

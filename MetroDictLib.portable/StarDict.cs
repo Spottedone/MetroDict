@@ -42,7 +42,7 @@ namespace MetroDictLib
 	        IsInitialised = true;
 		}
 
-	    public async Task<string> GetArticle(string word)
+	    public string GetArticle(string word)
 		{
 			if (!_articles.ContainsKey(word))
 			{

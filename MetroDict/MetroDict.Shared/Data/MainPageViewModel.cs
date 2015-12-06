@@ -8,11 +8,11 @@ namespace MetroDict.Shared.Data
     /// <summary>
     /// view model for main page.
     /// </summary>
-	internal class MainPageViewModel
+    public class MainPageViewModel
 	{
         #region --- commands ---
 
-	    public readonly SearchCommand SearchCommand;
+        public SearchCommand SearchCmd { get; set; }
 
 	    #endregion
 
@@ -24,7 +24,8 @@ namespace MetroDict.Shared.Data
         /// </summary>
 	    public MainPageViewModel()
 	    {
-            SearchCommand = new SearchCommand();
+            SearchCmd = new SearchCommand(this);
+            Results = new List<ArticleViewModel>();
 	    }
 	}
 }
