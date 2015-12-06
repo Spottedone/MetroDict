@@ -57,12 +57,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MetroDictLib\MetroDictLib.csproj">
-      <Project>{86F6AEE5-AC16-4E72-93B9-4B5A04E009C3}</Project>
-      <Name>MetroDictLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <None Include="TestData\german_rus.dict.dz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

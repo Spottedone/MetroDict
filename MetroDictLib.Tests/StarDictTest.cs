@@ -45,7 +45,7 @@ namespace MetroDictLib.Tests
 			var sd = new StarDict(workDir, "german_rus");
 			sd.Init().Wait();
 
-			List<string> articles = sd.GetArticlesContaining("heute").Result;
+			List<string> articles = sd.GetArticlesContaining("heute");
 			Assert.IsNotNull(articles);
 			Assert.AreNotEqual(articles.Count, 0);
 		}

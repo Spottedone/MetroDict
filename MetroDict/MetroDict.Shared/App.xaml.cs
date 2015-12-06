@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -15,6 +18,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using MetroDictLib;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -25,6 +29,9 @@ namespace MetroDict
     /// </summary>
     public sealed partial class App : Application
     {
+        public Exception StartupException = null;
+        public List<StarDict> Dictionaries = new List<StarDict>();
+
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
 #endif
@@ -37,6 +44,48 @@ namespace MetroDict
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            UnhandledException += OnUnhandledException;
+        }
+
+        private void OnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        {
+            // show message box
+            
+        }
+
+        private async Task InitDictionaries()
+        {
+            var factory = new DictFactory();
+            try
+            {
+                Dictionaries = (await factory.Create()).ToList();
+            }
+            catch (Exception ae)
+            {
+                StartupException = ae;
+            }
+
+            foreach (var dictionary in Dictionaries)
+            {
+                try
+                {
+                    //TODO: splash screen message
+                    await dictionary.Init();
+                }
+                catch (Exception)
+                {
+                    //TODO: log
+                }
+            }
+        }
+
+        private void InitSplashScreen(SplashScreen splashScreen)
+        {
+            ExtendedSplash eSplash = new ExtendedSplash(splashScreen);
+            // Register an event handler to be executed when the splash screen has been dismissed.
+            splashScreen.Dismissed += new TypedEventHandler<SplashScreen, object>(eSplash.onSplashScreenDismissed);
+            Window.Current.Content = eSplash;
+            Window.Current.Activate();
         }
 
         /// <summary>
@@ -45,8 +94,11 @@ namespace MetroDict
         /// search results, and so forth.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            InitSplashScreen(e.SplashScreen);
+            await InitDictionaries();
+
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {

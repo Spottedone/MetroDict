@@ -6,44 +6,53 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace MetroDictLib
 {
 	public class StarDict : IDisposable
 	{
-		private readonly string _workDir;
 		private readonly string _name, _indexFileName, _mainFileName;
 		private bool _disposed = false;
-		private FileStream _index;
 		private MemoryStream _mainStream;
 		private BinaryReader _reader;
 		private readonly Dictionary<string, Article> _articles = new Dictionary<string, Article>();
 
-		/// <summary>
-		/// Constructs an instance of this class.
-		/// </summary>
-		/// <param name="name">Dictionary name without extension!</param>
-		public StarDict(string workDir, string name)
+	    private readonly StorageFile _main, _index;
+        public bool IsInitialised { get; set; }
+
+        /// <summary>
+        /// Constructs an instance of this class.
+        /// </summary>
+        /// <param name="name">Dictionary name without extension!</param>
+        public StarDict(string name)
 		{
-			this._workDir = workDir;
-			this._name = name;
-			this._indexFileName = Path.Combine(_workDir, string.Format("{0}.idx", _name));
-			this._mainFileName = Path.Combine(_workDir, string.Format("{0}.dict.dz", _name));
+            //this._name = name;
+            //this._indexFileName = Path.Combine(_workDir, string.Format("{0}.idx", _name));
+            //this._mainFileName = Path.Combine(_workDir, string.Format("{0}.dict.dz", _name));
+        }
+
+	    public StarDict(StorageFile main, StorageFile index)
+	    {
+	        _main = main;
+	        _index = index;
+            IsInitialised = false;
+        }
+
+	    public async Task Init()
+	    {
+            await ReadIndex();
+            using (var compressedStream = new GZipStream(
+                (await _main.OpenReadAsync()).AsStreamForRead(), CompressionMode.Decompress))
+            {
+                this._mainStream = new MemoryStream();
+                await compressedStream.CopyToAsync(this._mainStream);
+                _reader = new BinaryReader(_mainStream);
+            }
+	        IsInitialised = true;
 		}
 
-		public async Task Init()
-		{
-			await ReadIndex();
-			using (var compressedStream = new GZipStream(File.OpenRead(_mainFileName), CompressionMode.Decompress))
-			{
-				this._mainStream = new MemoryStream();
-				await compressedStream.CopyToAsync(this._mainStream);
-				_reader = new BinaryReader(_mainStream);
-			}
-			Console.WriteLine(string.Format("{0} articles total.", _articles.Keys.Count));
-		}
-
-		public async Task<string> GetArticle(string word)
+	    public async Task<string> GetArticle(string word)
 		{
 			if (!_articles.ContainsKey(word))
 			{
@@ -53,7 +62,7 @@ namespace MetroDictLib
 			return GetArticleBody(article);
 		}
 
-		public async Task<List<string>> GetArticlesContaining(string word)
+		public List<string> GetArticlesContaining(string word)
 		{
 			var keys = from k in _articles.Keys
 					   where k.ToLower().Contains(word.ToLower())
@@ -74,10 +83,9 @@ namespace MetroDictLib
 			byte b;
 			try
 			{
-				using (_index = File.OpenRead(_indexFileName))
+				using (Stream stream = (await _index.OpenReadAsync()).AsStreamForRead())
 				{
-					_index.Seek(0, SeekOrigin.Begin);
-					using (var br = new BinaryReader(_index))
+					using (var br = new BinaryReader(stream))
 					{
 						while (br.BaseStream.Position != br.BaseStream.Length - 1)
 						{
@@ -101,7 +109,7 @@ namespace MetroDictLib
 								}
 							}
 							// convert to string
-							string word = System.Text.Encoding.UTF8.GetString(buf).Trim();
+						    string word = Encoding.UTF8.GetString(buf, 0, buf.Length);
 							// article start
 							uint start = br.ReadUInt32BE();
 							// article length
@@ -119,10 +127,10 @@ namespace MetroDictLib
 
 		private string GetArticleBody(Article article)
 		{
-			_mainStream.Seek(article.Start, SeekOrigin.Begin);
-			uint length = article.Length;
-			byte[] buf = _reader.ReadBytes((int)length);
-			return Encoding.UTF8.GetString(buf);
+            _mainStream.Seek(article.Start, SeekOrigin.Begin);
+            uint length = article.Length;
+            byte[] buf = _reader.ReadBytes((int)length);
+            return Encoding.UTF8.GetString(buf, 0, buf.Length);
 		}
 
 		protected void Dispose(bool disposing)
@@ -131,9 +139,8 @@ namespace MetroDictLib
 			{
 				if (!_disposed)
 				{
-					_mainStream.Close();
-					_mainStream.Dispose();
-				}
+                    _mainStream.Dispose();
+                }
 				_disposed = true;
 			}
 		}
