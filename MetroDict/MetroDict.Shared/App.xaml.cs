@@ -31,6 +31,7 @@ namespace MetroDict
     {
         public Exception StartupException = null;
         public List<StarDict> Dictionaries = new List<StarDict>();
+        private ExtendedSplash _splash;
 
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
@@ -69,7 +70,7 @@ namespace MetroDict
             {
                 try
                 {
-                    //TODO: splash screen message
+                    _splash.Message = $"Adding dictionary: {dictionary.Name}";
                     await dictionary.Init();
                 }
                 catch (Exception)
@@ -81,10 +82,10 @@ namespace MetroDict
 
         private void InitSplashScreen(SplashScreen splashScreen)
         {
-            ExtendedSplash eSplash = new ExtendedSplash(splashScreen);
+            _splash = new ExtendedSplash(splashScreen);
             // Register an event handler to be executed when the splash screen has been dismissed.
-            splashScreen.Dismissed += new TypedEventHandler<SplashScreen, object>(eSplash.onSplashScreenDismissed);
-            Window.Current.Content = eSplash;
+            splashScreen.Dismissed += _splash.onSplashScreenDismissed;
+            Window.Current.Content = _splash;
             Window.Current.Activate();
         }
 

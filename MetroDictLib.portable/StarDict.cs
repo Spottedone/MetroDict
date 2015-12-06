@@ -12,7 +12,6 @@ namespace MetroDictLib
 {
 	public class StarDict : IDisposable
 	{
-		private readonly string _name, _indexFileName, _mainFileName;
 		private bool _disposed = false;
 		private MemoryStream _mainStream;
 		private BinaryReader _reader;
@@ -20,24 +19,15 @@ namespace MetroDictLib
 
 	    private readonly StorageFile _main, _index;
         public bool IsInitialised { get; set; }
-
-        /// <summary>
-        /// Constructs an instance of this class.
-        /// </summary>
-        /// <param name="name">Dictionary name without extension!</param>
-        public StarDict(string name)
-		{
-            //this._name = name;
-            //this._indexFileName = Path.Combine(_workDir, string.Format("{0}.idx", _name));
-            //this._mainFileName = Path.Combine(_workDir, string.Format("{0}.dict.dz", _name));
-        }
+	    public string Name { get; private set; }
 
 	    public StarDict(StorageFile main, StorageFile index)
 	    {
 	        _main = main;
 	        _index = index;
             IsInitialised = false;
-        }
+	        Name = main.Name;
+	    }
 
 	    public async Task Init()
 	    {

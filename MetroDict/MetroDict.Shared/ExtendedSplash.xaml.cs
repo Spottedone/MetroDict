@@ -10,6 +10,12 @@ namespace MetroDict
     /// </summary>
     public sealed partial class ExtendedSplash : Page
     {
+        public string Message
+        {
+            get { return loadingMessage.Text; }
+            set { loadingMessage.Text = value; }
+        }
+
         public ExtendedSplash(SplashScreen splash)
         {
             InitializeComponent();

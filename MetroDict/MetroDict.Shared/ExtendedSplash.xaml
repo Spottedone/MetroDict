@@ -24,7 +24,7 @@
                           Foreground="White" IsActive="True" MaxHeight="50" MinHeight="50" MaxWidth="80" MinWidth="30" Width="78" Height="74"
                           VerticalAlignment="Center"></ProgressRing>
             <TextBlock x:Name="loadingMessage" 
-                       Text="Loading dictionaries..." 
+                       Text="Loading dictionaries..." Padding="10"
                        HorizontalAlignment="Center"  
                        Foreground="{StaticResource ApplicationForegroundThemeBrush}"></TextBlock>
         </StackPanel>
