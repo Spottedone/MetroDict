@@ -10,7 +10,7 @@
     xmlns:interactivity="using:Windows.UI.Interactivity"
     xmlns:helpers="using:MetroDictLib.Helpers"
     mc:Ignorable="d" GotFocus="Page_GotFocus">
-
+	
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10" />
@@ -32,8 +32,8 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextBlockStyle}"/>
-                        <TextBlock Text="{Binding BodyPreview}" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
+                        <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextBlockStyle}" Margin="5,0,0,0"/>
+                        <TextBlock Text="{Binding BodyPreview}" Style="{StaticResource SubtitleTextBlockStyle}" Margin="5,0,0,5"></TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -46,5 +46,8 @@
                 <helpers:ItemClickedBehavior ItemClickedCommand="{Binding ItemClickedCmd}" />
             </interactivity:Interaction.Behaviors>-->
         </ListView>
+        <TextBlock Grid.Row="0" Grid.Column="3" Style="{StaticResource HeaderTextBlockStyle}" Text="{Binding Path=SelectedTitle}"
+                   VerticalAlignment="Center" Padding="10,0,0,0"></TextBlock>
+        <WebView helpers:WebViewHelper.HtmlString="{Binding SelectedBody}" Grid.Row="1" Grid.Column="3"></WebView>
     </Grid>
 </Page>

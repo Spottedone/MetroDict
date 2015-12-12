@@ -1,17 +1,36 @@
 ﻿using MetroDictLib.Helpers;
+using System.Text.RegularExpressions;
 
 namespace MetroDict.Shared.Data
 {
     public class ArticleViewModel
     {
-        public string Title { get; set; }
-        public string Body { get; set; }
+        private string _body;
+        private const string _css = @"<link href=""ms-appx-web:///assets/article.css"" rel=""stylesheet"" />";
+        private string _search = @"<k>[\w\s]+</k>";
 
+        public string Title { get; set; }
         public string BodyPreview
         {
             get
             {
-                return Body.TruncateWithEllipsis(50);
+                return Regex.Replace(_body, _search, "").TruncateWithEllipsis(50);
+            }
+        }
+
+        /// <summary>
+        /// Returns body of an article. injects CSS.
+        /// </summary>
+        public string Body
+        {
+            get
+            {
+                return string.Concat(_css, _body);
+            }
+
+            set
+            {
+                _body = value;
             }
         }
     }
