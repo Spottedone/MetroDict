@@ -29,15 +29,17 @@ namespace MetroDict.Commands
         public void Execute(object parameter)
         {
             App thisApp = (Application.Current as App);
-            //var queryText = (parameter as string).Trim();
             var queryText = _model.QueryText;
 
             List<StarDict> dicts = thisApp.Dictionaries;
+
+            List<ArticleViewModel> results = new List<ArticleViewModel>();
             foreach (var dict in dicts)
             {
                 var found = dict.GetArticlesContaining(queryText);
-                _model.Results.AddRange(found.Select(r => new ArticleViewModel { Title = r, Body = dict.Name }));
+                results.AddRange(found.Select(r => new ArticleViewModel { Title = r.Key, Body = r.Value }));
             }
+            _model.Results = results;
         }
 
         public event EventHandler CanExecuteChanged;

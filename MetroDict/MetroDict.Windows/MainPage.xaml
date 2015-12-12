@@ -5,7 +5,10 @@
     xmlns:local="using:MetroDict"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="clr-namespace:Windows.UI.Interactivity;assembly=Windows.UI.Interactivity"
     xmlns:Cmds="using:MetroDict.Shared.Commands"
+    xmlns:interactivity="using:Windows.UI.Interactivity"
+    xmlns:helpers="using:MetroDictLib.Helpers"
     mc:Ignorable="d" GotFocus="Page_GotFocus">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
@@ -23,15 +26,25 @@
 				 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  x:Name="queryText"/>
         <Button Grid.Column="2" Grid.Row="0" Command="{Binding SearchCmd}" CommandParameter="{Binding Path=QueryText}">Search</Button>
-        <ListView Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource MDListView}" ItemsSource="{Binding Path=Results}">
+        <ListView Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource MDListView}" 
+                  ItemsSource="{Binding Path=Results}"
+                  SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Title}"/>
-                        <TextBlock Text="{Binding BodyPreview}"></TextBlock>
+                        <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextBlockStyle}"/>
+                        <TextBlock Text="{Binding BodyPreview}" Style="{StaticResource SubtitleTextBlockStyle}"></TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <!--<ListView.Items>
+                <ListViewItem>
+                    <TextBlock Text="Жопа" Style="{StaticResource SubheaderTextBlockStyle}" Margin="10,10"/>
+                </ListViewItem>
+            </ListView.Items>-->
+            <!--<interactivity:Interaction.Behaviors>
+                <helpers:ItemClickedBehavior ItemClickedCommand="{Binding ItemClickedCmd}" />
+            </interactivity:Interaction.Behaviors>-->
         </ListView>
     </Grid>
 </Page>

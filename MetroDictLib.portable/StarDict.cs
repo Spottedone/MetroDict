@@ -52,13 +52,17 @@ namespace MetroDictLib
 			return GetArticleBody(article);
 		}
 
-		public List<string> GetArticlesContaining(string word)
+		public Dictionary<string, string> GetArticlesContaining(string word)
 		{
 			var keys = from k in _articles.Keys
 					   where k.ToLower().Contains(word.ToLower())
 					   select k;
-			return (from k in keys
-					select GetArticleBody(_articles[k])).ToList();
+		    return (from k in keys
+		        select new
+		        {
+		            Key = k,
+		            Value = GetArticleBody(_articles[k])
+		        }).ToDictionary(p => p.Key, p => p.Value);
 		}
 
 		public void Dispose()
