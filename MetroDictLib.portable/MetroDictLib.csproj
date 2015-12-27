@@ -45,6 +45,7 @@
     <Compile Include="Helpers\ItemClickedBehavior.cs" />
     <Compile Include="Helpers\ReaderExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Helpers\WebViewHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StarDict.cs" />

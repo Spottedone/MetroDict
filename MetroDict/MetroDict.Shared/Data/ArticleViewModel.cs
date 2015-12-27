@@ -6,8 +6,9 @@ namespace MetroDict.Shared.Data
     public class ArticleViewModel
     {
         private string _body;
-        private const string _css = @"<link href=""ms-appx-web:///assets/article.css"" rel=""stylesheet"" />";
-        private string _search = @"<k>[\w\s]+</k>";
+        private const string _darkCss = @"<link href=""ms-appx-web:///assets/article_dark.css"" rel=""stylesheet"" />";
+		private const string _lightCss = @"<link href=""ms-appx-web:///assets/article_light.css"" rel=""stylesheet"" />";
+		private string _search = @"<k>[\w\s]+</k>";
 
         public string Title { get; set; }
         public string BodyPreview
@@ -25,7 +26,7 @@ namespace MetroDict.Shared.Data
         {
             get
             {
-                return string.Concat(_css, _body);
+                return string.Concat(getCss(), _body);
             }
 
             set
@@ -33,5 +34,14 @@ namespace MetroDict.Shared.Data
                 _body = value;
             }
         }
+
+		private string getCss()
+		{
+			if (ThemeHelper.IsDarkTheme())
+			{
+				return _darkCss;
+			}
+			return _lightCss;
+		}
     }
 }

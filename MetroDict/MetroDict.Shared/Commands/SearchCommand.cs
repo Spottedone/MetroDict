@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using System.Xml;
-using System.Linq;
-using Windows.UI.Xaml;
-using MetroDict.Shared.Data;
+﻿using MetroDict.Shared.Data;
 using MetroDictLib;
-using MetroDictLib.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using Windows.UI.Xaml;
 
 namespace MetroDict.Commands
 {
-    public class SearchCommand : ICommand
+	public class SearchCommand : ICommand
     {
         private readonly MainPageViewModel _model;
 
