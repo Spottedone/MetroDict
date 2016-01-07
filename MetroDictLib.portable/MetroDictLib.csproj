@@ -42,18 +42,12 @@
     <Compile Include="DictFactory.cs" />
     <Compile Include="Helpers\ArrayExtensions.cs" />
     <Compile Include="Helpers\CaselessEqualityComparer.cs" />
-    <Compile Include="Helpers\ItemClickedBehavior.cs" />
     <Compile Include="Helpers\ReaderExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Helpers\WebViewHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StarDict.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Windows.UI.Interactivity">
-      <HintPath>..\packages\Windows.UI.Interactivity.1.3.0.0\lib\win8\Windows.UI.Interactivity.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
